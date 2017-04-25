@@ -1,4 +1,4 @@
-function [ F ] = main( img1, img2, points )
+function [ F_un, F_n, F_den ] = main( img1, img2, points )
 
 %img1 - image 1
 %img1 - image 2
@@ -21,8 +21,18 @@ img2 = imread(img2);
 %Run Ransac, output matching pair coordinates
 [ xa, xb, ya, yb ] = RANSAC2( image1, image2, points );
  
-%Calculate Fundamental matrix
-[ F ] = Fundamental( xa, xb, ya, yb,'original');
+%Calculate Fundamental matrix for un-normalized data
+[ F_un ] = Fundamental( xa, xb, ya, yb );
+
+%Normalize points
+[ pa, Ta ] = NormalizedFundamental( xa, ya );
+[ pb, Tb ] = NormalizedFundamental( xb, yb );
+
+%Compute Fundamental matrix for normalized data
+[ F_n ] = Fundamental( pa(1,:), pb(1,:), pa(2,:), pb(2,:) );
+
+%Denormalize
+F_den = Tb*F_n*Ta.';
 
 end
 

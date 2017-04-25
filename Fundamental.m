@@ -1,6 +1,6 @@
-function [ F ] = Fundamental( xa, xb, ya, yb,method )
+function [ F ] = Fundamental( xa, xb, ya, yb )
 
-if(strcmp(method,'original'))
+
 f = ones(length(xa),1);
 A = [(xa.*xb).', (xa.*yb).', xa.', (ya.*xb).', (ya.*yb).', ya.', xb.', yb.', f];
 [U,S,V] = svd(A);
@@ -11,16 +11,15 @@ Fundamental = reshape(V(:,c),3,3);
 [ r, c ] = find(S_i==min(S_i(S_i>0)));
 S_i(r,c)=0;
 F = U_i*S_i*V_i;
-elseif(strcmp(method,'normalized'))
     
-elseif(strcmp(method,'RANSAC'))
+    %if(strcmp(method,'RANSAC'))
     threshold = 0.1;%TODO: tune it 
     max_nb_inlier = -1;
     max_num_iter = 10;
     %from xa,ya,xb,yb compute the normalized pairs p <-> q
     %p,q are of size 3,n
-    p=NormalizedFundamental(xa,ya);
-    q=NormalizedFundamental(xb,yb);
+    [p,~]=NormalizedFundamental(xa,ya);
+    [q,~]=NormalizedFundamental(xb,yb);
     for i=1:max_num_iter
         %First pick 8 point correspondences randomly from ^pi(p1) and
         %^pi'(p2)

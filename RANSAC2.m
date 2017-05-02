@@ -28,7 +28,7 @@ yb = pick_coordinates_b(2,:);
 width = length(img1(1,:));
 
 %Plots
-figure(2); 
+figure(1); 
 imshow([uint8(img1), uint8(img2)])
 
 hold on; 
@@ -37,7 +37,7 @@ scatter(xa, ya, 20, [1,0,0]);
 scatter(xb+width, yb ,20, [1,0,0]);
 
 for k=1:length(xa)
-    plot([xa(k) xb(k)+width], [ya(k) yb(k)], 'b', 'LineWidth', 1)
+    plot([xa(k) xb(k)+width], [ya(k) yb(k)], 'b', 'LineWidth', 1);
 end
 
 hold off;

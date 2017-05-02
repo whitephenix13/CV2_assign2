@@ -1,4 +1,4 @@
-function [ p, T ] = NormalizedFundamental( x, y )
+function[  p, T ] = NormalizedFundamental( x, y )
     
 m_x = sum(x)/length(x);
 m_y = sum(y)/length(y);

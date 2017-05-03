@@ -19,7 +19,7 @@ img2 = imread(img2);
 [ image1, image2 ] = RemoveBackground( img1, img2 );
 
 %Run Ransac, output matching pair coordinates
-[ xa, xb, ya, yb ] = RANSAC2( image1, image2, points );
+[ xa, xb, ya, yb ] = RANSAC2( image1, image2, points,true);
  
 %Calculate Fundamental matrix for un-normalized data
 [ F,inliers_index1] = Fundamental( xa, xb, ya, yb,false );

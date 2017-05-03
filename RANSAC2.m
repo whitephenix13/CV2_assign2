@@ -1,4 +1,4 @@
-function [ xa, xb, ya, yb ] = RANSAC2( img1, img2, points )
+function [ xa, xb, ya, yb ] = RANSAC2( img1, img2, points, plot)
 
 img1 = single(img1);
 img2 = single(img2);
@@ -28,19 +28,21 @@ yb = pick_coordinates_b(2,:);
 width = length(img1(1,:));
 
 %Plots
-figure(1); 
-imshow([uint8(img1), uint8(img2)])
-
-hold on; 
-
-scatter(xa, ya, 20, [1,0,0]);
-scatter(xb+width, yb ,20, [1,0,0]);
-
-for k=1:length(xa)
-    plot([xa(k) xb(k)+width], [ya(k) yb(k)], 'b', 'LineWidth', 1);
+if(plot)
+    figure(1);
+    imshow([uint8(img1), uint8(img2)])
+    
+    hold on;
+    
+    scatter(xa, ya, 20, [1,0,0]);
+    scatter(xb+width, yb ,20, [1,0,0]);
+    
+    for k=1:length(xa)
+        plot([xa(k) xb(k)+width], [ya(k) yb(k)], 'b', 'LineWidth', 1);
+    end
+    
+    hold off;
 end
-
-hold off;
 
 end
 

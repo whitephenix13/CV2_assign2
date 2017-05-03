@@ -7,7 +7,7 @@ function [ F, F_den ] = main( img1, img2, points )
 if(nargin==0)
     im1_nb = '01';
     im2_nb = '02';
-    points = 10;
+    points = 20;
     img1 = strcat('House/frame000000',im1_nb,'.png');
     img2 = strcat('House/frame000000',im2_nb,'.png');
 end
@@ -47,19 +47,46 @@ function [] = plot_epipolar(img1,img2,F,inliers_index,points,matches,tit)
     plot(points(inliers_index,1),points(inliers_index,2),'go');
 
     X=[points(inliers_index,1)';points(inliers_index,2)';ones(size(inliers_index,2),1)'];
+    Y=[matches(inliers_index,1)';matches(inliers_index,2)';ones(size(inliers_index,2),1)'];
     %Compute epipole as being the 3rd column of V matrix from svd of
     %Fundamental.
-    [U,S,V] = svd(F);
-    epipole= V(:,3);
-    
-    %plot epipolar line for first image
-    for k=1:size(inliers_index,2)
-        plot([X(1,k) epipole(1)], [X(2,k) epipole(2)], 'b', 'LineWidth', 1);
-    end
-    %plot epipolar line for second image
-    for k=1:size(inliers_index,2)
-        plot([matches(inliers_index(k),1)+width epipole(1)+width], [matches(inliers_index(k),2) epipole(2)],...
-            'b', 'LineWidth', 1);
+    plotMethod = 2; %1 for epipole, 2 for equation 
+    if(plotMethod==1)
+        [U,S,V] = svd(F);
+        epipole= V(:,3);
+        
+        %plot epipolar line for first image
+        for k=1:size(inliers_index,2)
+            plot([X(1,k) epipole(1)], [X(2,k) epipole(2)], 'b', 'LineWidth', 1);
+        end
+        %plot epipolar line for second image
+        for k=1:size(inliers_index,2)
+            plot([matches(inliers_index(k),1)+width epipole(1)+width], [matches(inliers_index(k),2) epipole(2)],...
+                'b', 'LineWidth', 1);
+        end
+    else % cf: http://www.cs.toronto.edu/~jepson/csc420/notes/epiPolarGeom.pdf
+        line_equ_l = F'*X;%3xm
+        line_equ_r = F*Y;%3xm
+        %line_equ_l is such that for a column of the matrix [a;b;c],
+        %ax+by+c=0 where x and y are the coordinate of a point in the right
+        %image 
+        %the equation y=f(x) for the right image is then given by the function line below :
+        Xl1=ones(size(line_equ_l,2),1)*0 ;%mx1
+        Xl2=ones(size(line_equ_l,2),1)* size(img2,2);%mx1
+        Xr1=ones(size(line_equ_l,2),1)*0; %mx1
+        Xr2=ones(size(line_equ_l,2),1)* size(img1,2);%mx1
+        Yl1 = line(Xl1,line_equ_l(1,:)',line_equ_l(2,:)',line_equ_l(3,:)');
+        Yl2 = line(Xl2,line_equ_l(1,:)',line_equ_l(2,:)',line_equ_l(3,:)');
+        Yr1 = line(Xr1,line_equ_r(1,:)',line_equ_r(2,:)',line_equ_r(3,:)');
+        Yr2 = line(Xr2,line_equ_r(1,:)',line_equ_r(2,:)',line_equ_r(3,:)');
+        %plot epipolar line for the first image
+        for k=1:size(inliers_index,2)
+            plot([Xl1(k) Xl2(k)], [Yl1(k) Yl2(k)], 'b', 'LineWidth', 1);
+        end
+        %plot epipolar line for the second image
+        for k=1:size(inliers_index,2)
+            plot([Xr1(k)+width Xr2(k)+width], [Yr1(k) Yr2(k)], 'b', 'LineWidth', 1);
+        end
     end
     %RANSAAC predicted matched inliers 
     plot(matches(inliers_index,1)+width,matches(inliers_index,2),'go');

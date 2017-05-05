@@ -7,7 +7,7 @@ function [ F, F_den ] = main( img1, img2, points )
 if(nargin==0)
     im1_nb = '01';
     im2_nb = '02';
-    points = 20;
+    points = 10;
     img1 = strcat('House/frame000000',im1_nb,'.png');
     img2 = strcat('House/frame000000',im2_nb,'.png');
 end
@@ -24,11 +24,12 @@ img2 = imread(img2);
 %Calculate Fundamental matrix for un-normalized data
 [ F,inliers_index1] = Fundamental( xa, xb, ya, yb,false );
 %test correctness of fundamental : 
-X=[xa(1,inliers_index1);ya(1,inliers_index1);ones(1,size(xa,2))]
-Y=[xb(1,inliers_index1);yb(1,inliers_index1);ones(1,size(xb,2))]
+X=[xa(1,inliers_index1);ya(1,inliers_index1);ones(1,size(xa,2))];
+Y=[xb(1,inliers_index1);yb(1,inliers_index1);ones(1,size(xb,2))];
 diag(Y'*F*X)
 %Compute Fundamental matrix for normalized data
 [ F_den,inliers_index2] = Fundamental( xa, xb, ya, yb,true );
+diag(Y'*F_den*X)
 
 plot_epipolar(img1,img2,F,inliers_index1,[xa',ya'],[xb',yb'],'unormalized epipolar lines');
 plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epipolar lines');
@@ -50,7 +51,7 @@ function [] = plot_epipolar(img1,img2,F,inliers_index,points,matches,tit)
     Y=[matches(inliers_index,1)';matches(inliers_index,2)';ones(size(inliers_index,2),1)'];
     %Compute epipole as being the 3rd column of V matrix from svd of
     %Fundamental.
-    plotMethod = 2; %1 for epipole, 2 for equation 
+    plotMethod = 1; %1 for epipole, 2 for equation 
     if(plotMethod==1)
         [U,S,V] = svd(F);
         epipole= V(:,3);

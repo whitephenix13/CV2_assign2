@@ -5,7 +5,7 @@ if(~normalize)
     inliers_index=linspace(1,size(xa,2),size(xa,2));
 %Normalized Eight-point Algorithm with RANSAC
 else     
-    threshold = 1;%TODO: tune it
+    threshold = 1;
     max_nb_inlier = -1;
     inliers_index=[];
     max_num_iter = 100;

@@ -1,6 +1,9 @@
-function [ point_view_matrix ,point_correspondance ] = chaining(number_points)
+function [ point_view_matrix ,point_correspondance ] = chaining(log_)
+if(nargin<1)
+    log_=false;
+end
 number_image = 49;
-max_number_points= 800;
+max_number_points= 1000;
 point_view_matrix=zeros(number_image,number_image*max_number_points);
 point_view_matrix_index=1;
 point_correspondance=ones(number_image,max_number_points,3)*-1;
@@ -64,16 +67,12 @@ for ind1=1:number_image
         db=reshape(db,size(db,2),size(db,3));
         
         %Run Ransac, output matching pair coordinates
-        [ xa_all, xb_all, ya_all, yb_all ] = RANSAC2( image1, image2, number_points,false,fa,da,fb,db,false);
+        [ xa_all, xb_all, ya_all, yb_all ] = RANSAC2( image1, image2, -1,false,fa,da,fb,db);
 
         %Calculate Fundamental matrix for un-normalized data
         [ F,inliers_index] = Fundamental( xa_all, xb_all, ya_all, yb_all,true );
         
-        %subsample the points from the positive match
-        if(length(inliers_index)>number_points)
-            index= randperm(length(inliers_index),number_points);
-            inliers_index=inliers_index(index);
-        end
+
         disp(strcat(num2str(i), '=>', num2str(j),'_',num2str(length(inliers_index))));
         %loop over all new matches
         for k=1:length(inliers_index)
@@ -86,10 +85,12 @@ for ind1=1:number_image
             %test if the point was already added in frame i or j
             if(frame_i_index~=-1 && (frame_j_index~=-1))%check if indexes are the same (they should be!!!)
                 if(frame_i_index ~= frame_j_index)
-                    if(frame_i_index<frame_j_index)
-                        disp(strcat('Case1.1: merge column',num2str(frame_j_index),'to',num2str(frame_i_index)));
-                    else
-                        disp(strcat('Case1.1: merge column',num2str(frame_i_index),'to',num2str(frame_j_index)));
+                    if(log_)
+                        if(frame_i_index<frame_j_index)
+                            disp(strcat('Case1.1: merge column',num2str(frame_j_index),'to',num2str(frame_i_index)));
+                        else
+                            disp(strcat('Case1.1: merge column',num2str(frame_i_index),'to',num2str(frame_j_index)));
+                        end
                     end
                     %find the smallest and biggest index index
                     good_index = min(frame_i_index,frame_j_index);
@@ -114,7 +115,9 @@ for ind1=1:number_image
                     new_x = xa;
                     new_y = ya;
                     new_index=frame_j_index;
-                    disp(strcat('Case 2.1 add match frame_',num2str(i),' to index_',num2str(frame_j_index)));
+                    if(log_)
+                        disp(strcat('Case 2.1 add match frame_',num2str(i),' to index_',num2str(frame_j_index)));
+                    end
                 else
                     %disp('Case2.2');
                     frame_to_update= j;
@@ -122,8 +125,9 @@ for ind1=1:number_image
                     new_x = xb;
                     new_y = yb;
                     new_index=frame_i_index;
-                    disp(strcat('Case 2.2 add match frame_',num2str(j),' to index_',num2str(frame_i_index)));
-                    
+                    if(log_)
+                        disp(strcat('Case 2.2 add match frame_',num2str(j),' to index_',num2str(frame_i_index)));
+                    end
                 end
                 %update point_correspondance
                 point_correspondance(frame_to_update,new_point_index,1)=new_x;
@@ -149,8 +153,10 @@ for ind1=1:number_image
                 point_view_matrix(j,new_index)=1;
                 %update point_view_matrix_index
                 point_view_matrix_index=point_view_matrix_index+1;
-                disp(strcat('Case3: match to index ',num2str(new_index),'_',num2str(xa),'_',num2str(ya)...
-                    ,'=>',num2str(xb),'_',num2str(yb)));
+                if(log_)
+                    disp(strcat('Case3: match to index ',num2str(new_index),'_',num2str(xa),'_',num2str(ya)...
+                        ,'=>',num2str(xb),'_',num2str(yb)));
+                end
             end
         end
     end

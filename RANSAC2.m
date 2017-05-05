@@ -1,10 +1,11 @@
-function [ xa, xb, ya, yb ] = RANSAC2( img1, img2, points,plot_,fa_,da_,fb_,db_,use_subsample)
+function [ xa, xb, ya, yb ] = RANSAC2( img1, img2, points,plot_,fa_,da_,fb_,db_)
 
 img1 = single(img1);
 img2 = single(img2);
 
-if(nargin> 5)
-    use_subsample=true;
+use_subsample=true;
+if(points<0)
+    use_subsample=false;
 end
 if(nargin> 4)
     fa=fa_;
@@ -29,6 +30,9 @@ if(use_subsample)
         pick_coordinates_a = [pick_coordinates_a, coordinates_a(1:2,i)];
         pick_coordinates_b = [pick_coordinates_b, coordinates_b(1:2,i)];
     end
+else
+    pick_coordinates_a=coordinates_a;
+    pick_coordinates_b=coordinates_b;
 end
 xa = pick_coordinates_a(1,:);
 ya = pick_coordinates_a(2,:);

@@ -5,8 +5,8 @@ function [ F, F_den ] = main( img1, img2, points )
 %points - number of matching pairs to detect
 
 if(nargin==0)
-    im1_nb = '01';
-    im2_nb = '02';
+    im1_nb = '10';
+    im2_nb = '11';
     points = 20;%set to -1 to get all points
     img1 = strcat('House/frame000000',im1_nb,'.png');
     img2 = strcat('House/frame000000',im2_nb,'.png');

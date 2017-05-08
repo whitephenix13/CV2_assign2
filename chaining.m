@@ -84,6 +84,7 @@ for ind1=1:number_image
             [frame_j_index,new_ind_j]=findIndexCorrespondance(point_correspondance,j, xb,yb);
             %test if the point was already added in frame i or j
             if(frame_i_index~=-1 && (frame_j_index~=-1))%check if indexes are the same (they should be!!!)
+
                 if(frame_i_index ~= frame_j_index)
                     if(log_)
                         if(frame_i_index<frame_j_index)
@@ -99,10 +100,13 @@ for ind1=1:number_image
                     point_view_matrix=mergeColumn(point_view_matrix,good_index,bad_index,0);
                     %update point_correspondance
                     %change all bad_index to good index
-                    point_correspondance(point_correspondance(:,:,3)==bad_index)=good_index;
+                    temp=point_correspondance(:,:,3);
+                    temp(temp==bad_index) = good_index;
+                    point_correspondance(:,:,3)=temp;
                     %change all index >bad_index to index -1
-                    point_correspondance(point_correspondance(:,:,3)>bad_index)=...
-                        point_correspondance(point_correspondance(:,:,3)>bad_index)-1;
+                    temp=point_correspondance(:,:,3);
+                    temp(temp>bad_index)= temp(temp>bad_index)-1;
+                    point_correspondance(:,:,3)=temp;
                     %update point_view_matrix_index
                     point_view_matrix_index=point_view_matrix_index-1;
                 end
@@ -162,12 +166,11 @@ for ind1=1:number_image
     end
 end
 %removed unused entries
-size(point_view_matrix)
 if(point_view_matrix_index>1)
     point_view_matrix(:,point_view_matrix_index:end)=[];
     point_correspondance(point_view_matrix_index:end,:)=[];
 end
-size(point_view_matrix)
+disp(strcat('Number of point in point view matrix:_', num2str(size(point_view_matrix,2))));
 %display result
 figure();
 nb_pt = min(size(point_view_matrix,2),1000);
@@ -188,16 +191,18 @@ imshow(point_view_matrix(:,1:nb_pt));
     function [ind,new_ind] = findIndexCorrespondance(point_correspondance,frame, x,y)
         ind=-1;
         new_ind=-1;
-        %disp(strcat('try find ',num2str(x),'_',num2str(y)));
-        %disp(point_correspondance(frame,1:30,:));
+        %loop over all the points stored for that frame 
         for m=1:size(point_correspondance,2)
+            %memorize [x,y,index] in a variable 
             val = point_correspondance(frame,m,:);
-            %[x,y,val(1),val(2)]
+            %default value for unsused point is -1,-1,-1
             if(val(1)==-1 && (val(2) == -1) && (new_ind==-1))
                 new_ind=m;
                 break;
             end
             %dist = power(x-val(1),2) + power(y-val(2),2);
+            %tol = 0;
+            %if(dist<=tol*tol)
             if(x==val(1) && (y==val(2)))
                 ind=val(3);
             end

@@ -34,7 +34,24 @@ diag(Y'*F_den*X)
 plot_epipolar(img1,img2,F,inliers_index1,[xa',ya'],[xb',yb'],'unormalized epipolar lines');
 plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epipolar lines');
 
+%Create point_view and point_correspondance matrices
+%Change the path in chaining for images folder
+[ point_view_matrix ,point_correspondance ] = chaining(0);
+
+%Look second half of lecture 2 for algorithm
+
+%Normalize the data by the means
+[ new_point_correspondance ] = normalize_coordinates( point_correspondance, point_view_matrix );
+
+%Pick the biggest dense block(all values are 1) in the point_view_matrix
+[ measurement_matrix, block_view] = build_dense_block( point_view_matrix, new_point_correspondance);
+
+%Structure from Motion
+% Filter out the cooridinates with big z values(more than 3), and scale the image by multiplying the z values by 10
+[ structure, motion, s ] = SfM(measurement_matrix, 10, 3);
+
 end
+
 function [] = plot_epipolar(img1,img2,F,inliers_index,points,matches,tit)
 %points : Mx2 matrix: [x1,y1;x2,y2;...]
 figure;

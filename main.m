@@ -1,4 +1,4 @@
-function [ F, F_den ] = main( img1, img2, points )
+function [ F, F_den, s ] = main( img1, img2, points )
 
 %img1 - image 1
 %img1 - image 2

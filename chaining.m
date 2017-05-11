@@ -10,6 +10,9 @@ point_correspondance=ones(number_image,max_number_points,3)*-1;
 %point_correspondance(i,j,:) = [x;y;index] where i:frame number, j:index of
 %the matche point, (x,y) match point coordinate, index: index of this point
 %in the point_view_matrix or -1
+
+%optimization: 
+useColumnMerging=false;
 window_size = 1;
 
 %memorize the descriptors
@@ -84,8 +87,7 @@ for ind1=1:number_image
             [frame_j_index,new_ind_j]=findIndexCorrespondance(point_correspondance,j, xb,yb);
             %test if the point was already added in frame i or j
             if(frame_i_index~=-1 && (frame_j_index~=-1))%check if indexes are the same (they should be!!!)
-
-                if(frame_i_index ~= frame_j_index)
+                if(frame_i_index ~= frame_j_index && (useColumnMerging))
                     if(log_)
                         if(frame_i_index<frame_j_index)
                             disp(strcat('Case1.1: merge column',num2str(frame_j_index),'to',num2str(frame_i_index)));
@@ -175,6 +177,8 @@ disp(strcat('Number of point in point view matrix:_', num2str(size(point_view_ma
 figure();
 nb_pt = min(size(point_view_matrix,2),1000);
 imshow(point_view_matrix(:,1:nb_pt));
+figure();
+imshow(point_view_matrix(:,end-nb_pt:end));
 
     function M = mergeColumn(Mat,i,j,val)
         %assume that Mat is a matrix of 0 and 1

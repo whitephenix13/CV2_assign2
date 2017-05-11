@@ -14,6 +14,7 @@ for i=1:images
         %if block_view(i,k)==1
             for m=1:points2
                 if k==point_correspondance(i,m,3)
+                    [k,i]
                     x_coordinates = [x_coordinates, point_correspondance(i,m,1)];
                     y_coordinates = [y_coordinates, point_correspondance(i,m,2)];                    
                 end
@@ -21,7 +22,7 @@ for i=1:images
         %end
     end
     %Wrong
-    sizes = [sizes;length(x_coordinates),length(y_coordinates)];
+    %sizes = [sizes;length(x_coordinates),length(y_coordinates)]
    %measurement_matrix = [measurement_matrix; x_coordinates; y_coordinates];
 end
 

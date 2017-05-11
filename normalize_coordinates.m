@@ -1,7 +1,7 @@
 function [ new_point_correspondance ] = normalize_coordinates( point_correspondance, point_view_matrix )
 
 new_point_correspondance = point_correspondance;
-%Numberof images
+%Number of images
 images=49;
 %Number of points
 points1 = length(point_view_matrix(1,:));

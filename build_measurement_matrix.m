@@ -1,4 +1,4 @@
-function [ measurement_matrix] = build_dense_block( new_point_correspondance,x1,x2,y1,y2)
+function [ measurement_matrix] = build_measurement_matrix( new_point_correspondance,x1,x2,y1,y2)
 
 measurement_matrix = [];
 for i=x1:x2

@@ -1,4 +1,4 @@
-function [ point_view_matrix ,point_correspondance ] = chaining(log_)
+function [ point_view_matrix ,point_correspondance ] = chaining(log_,save_)
 if(nargin<1)
     log_=false;
 end
@@ -40,15 +40,15 @@ for d_index=1:number_image
     keypoints_frame(d_index,:,:)=pad_fa;
     descriptor_frame(d_index,:,:)=pad_da;
 end
-%j varies from 1+window_size to number_image and then to window_size
-%i varies from 1 to number_image and then to window_size-1
+%j varies from 2 to number_image and then to window_size
+%i varies from 1 to number_image
 for ind1=1:number_image
-    for ind2= (ind1-window_size) : (ind1-1)
+    for ind2= ind1+1 : ind1+window_size
         %i and j corresponds to the image we match
-        j=ind1;
-        i=ind2;
-        if(ind2<1)
-            i=number_image+ind2;
+        i=ind1;
+        j=ind2;
+        if(ind2>number_image)
+            j=ind2-number_image;
         end
                 
         %in case we want to plot in ransaac: 
@@ -78,7 +78,8 @@ for ind1=1:number_image
 
         disp(strcat(num2str(i), '=>', num2str(j),'_',num2str(length(inliers_index))));
         %loop over all new matches
-        for k=1:length(inliers_index)
+        for k2=1:length(inliers_index)
+            k=inliers_index(k2);
             xa = xa_all(k);
             ya = ya_all(k);
             xb = xb_all(k);
@@ -115,7 +116,6 @@ for ind1=1:number_image
                 
             elseif(frame_i_index~=-1 || frame_j_index~=-1)%update matrices for i or j
                 if (frame_i_index==-1)
-                    %disp('Case2.1');
                     frame_to_update= i;
                     new_point_index = new_ind_i;
                     new_x = xa;
@@ -125,7 +125,6 @@ for ind1=1:number_image
                         disp(strcat('Case 2.1 add match frame_',num2str(i),' to index_',num2str(frame_j_index)));
                     end
                 else
-                    %disp('Case2.2');
                     frame_to_update= j;
                     new_point_index = new_ind_j;
                     new_x = xb;
@@ -170,16 +169,22 @@ end
 %removed unused entries
 if(point_view_matrix_index>1)
     point_view_matrix(:,point_view_matrix_index:end)=[];
-    point_correspondance(point_view_matrix_index:end,:)=[];
+    point_correspondance(point_view_matrix_index:end,:,:)=[];
 end
 disp(strcat('Number of point in point view matrix:_', num2str(size(point_view_matrix,2))));
 %display result
 figure();
 nb_pt = min(size(point_view_matrix,2),1000);
 imshow(point_view_matrix(:,1:nb_pt));
-figure();
-imshow(point_view_matrix(:,end-nb_pt:end));
+if(size(point_view_matrix,2)>1000)
+    figure();
+    imshow(point_view_matrix(:,end-nb_pt:end));
+end
 
+if(save_)
+    save('p_c.mat','point_correspondance')
+    save('p_v.mat','point_view_matrix')
+end
     function M = mergeColumn(Mat,i,j,val)
         %assume that Mat is a matrix of 0 and 1
         M=Mat;

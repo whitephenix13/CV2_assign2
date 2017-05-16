@@ -20,26 +20,32 @@ function [ measurement_matrix, s ] = SfM_run( point_correspondance, scale_z, thr
 % [ measurement_matrix6] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
 
 x1=1; x2=3; y1=1; y2=13;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix1] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix1] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix1=measurement_matrix1-mean(measurement_matrix1,2);
 x1=4; x2=6; y1=1; y2=6;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix2] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix2] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix2=measurement_matrix2-mean(measurement_matrix2,2);
+
 x1=7; x2=9; y1=1; y2=3;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix3] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix3] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix3=measurement_matrix3-mean(measurement_matrix3,2);
+
 x1=1; x2=3; y1=50; y2=54;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix4] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix4] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix4=measurement_matrix4-mean(measurement_matrix4,2);
+
 x1=1; x2=3; y1=156; y2=172;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix5] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix5] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix5=measurement_matrix5-mean(measurement_matrix5,2);
+
 x1=1; x2=3; y1=185; y2=212;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix6] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix6] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix6=measurement_matrix6-mean(measurement_matrix6,2);
+
 x1=1; x2=3; y1=242; y2=282;
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, x1,x2,y1,y2 );
-[ measurement_matrix7] = build_measurement_matrix( new_point_correspondance, x1,x2,y1,y2);
+[ measurement_matrix7] = build_measurement_matrix( point_correspondance, x1,x2,y1,y2);
+measurement_matrix7=measurement_matrix7-mean(measurement_matrix7,2);
+
 %measurement_matrix = measurement_matrix1;
 %measurement_matrix = [ measurement_matrix1, measurement_matrix2, measurement_matrix3, measurement_matrix4,measurement_matrix5, measurement_matrix6]; 
 measurement_matrix = [measurement_matrix1, measurement_matrix2,  measurement_matrix3,  measurement_matrix4, measurement_matrix5, measurement_matrix6,  measurement_matrix7];

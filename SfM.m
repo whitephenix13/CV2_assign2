@@ -15,7 +15,7 @@ structure = S3^p2*V3;
 % motion*L*motion.' = Id
 L = mrdivide(mldivide(motion,eye(length(motion(:,1)))), transpose(motion));
 %L = mldivide(motion,mrdivide(eye(length(motion(:,1))),transpose(motion)));
-C = chol(L);
+C = chol(L)';
 structure = mldivide(C,structure);
 
 

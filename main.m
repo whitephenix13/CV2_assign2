@@ -7,7 +7,7 @@ function [ F, F_den, s ] = main( img1, img2, points )
 if(nargin==0)
     im1_nb = '10';
     im2_nb = '11';
-    points = 20;%set to -1 to get all points
+    points = -1;%set to -1 to get all points
     img1 = strcat('House/frame000000',im1_nb,'.png');
     img2 = strcat('House/frame000000',im2_nb,'.png');
 end
@@ -36,7 +36,7 @@ plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epi
 
 %Create point_view and point_correspondance matrices
 %Change the path in chaining for images folder
-[ point_view_matrix ,point_correspondance ] = chaining(0);
+[ point_view_matrix ,point_correspondance ] = chaining(false,false);
 
 %Look second half of lecture 2 for algorithm
 

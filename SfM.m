@@ -11,12 +11,12 @@ motion = U3*S3^p1;
 structure = S3^p2*V3;
 
 
-% Ai*L*Ai.' = Id
-% motion*L*motion.' = Id
-L = mrdivide(mldivide(motion,eye(length(motion(:,1)))), transpose(motion));
-%L = mldivide(motion,mrdivide(eye(length(motion(:,1))),transpose(motion)));
-C = chol(L)';
-structure = mldivide(C,structure);
+% % Ai*L*Ai.' = Id
+% % motion*L*motion.' = Id
+% L = mrdivide(mldivide(motion,eye(length(motion(:,1)))), transpose(motion));
+% %L = mldivide(motion,mrdivide(eye(length(motion(:,1))),transpose(motion)));
+% C = chol(L);
+% structure = mldivide(C.',structure);
 
 
 %Filter by threshold

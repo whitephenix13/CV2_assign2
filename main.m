@@ -39,12 +39,12 @@ plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epi
 [ point_view_matrix ,point_correspondance ] = chaining(false,false);
 
 %Look second half of lecture 2 for algorithm
+[ measurement_matrix ] = myMeasurement(point_view_matrix, point_correspondance );
 
 %Normalize the data by the means
 [ normalized_measurement_matrix ] = normalize_coordinates( measurement_matrix );
 
 %Pick the biggest dense block(all values are 1) in the point_view_matrix
-[ measurement_matrix, block_view] = build_dense_block( point_view_matrix, new_point_correspondance);
 
 %Structure from Motion
 % Filter out the cooridinates with big z values(more than 3), and scale the image by multiplying the z values by 10

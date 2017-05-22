@@ -39,6 +39,11 @@ plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epi
 [ point_view_matrix ,point_correspondance ] = chaining(false,false);
 
 %Look second half of lecture 2 for algorithm
+%2 methods, use 1
+%images = 49;
+% point1 = 1;
+%point2 = 1500;
+%[ measurement_matrix] = build_measurement_matrix(point_view_matrix, point_correspondance,images,point1,point2);
 [ measurement_matrix ] = myMeasurement(point_view_matrix, point_correspondance );
 
 %Normalize the data by the means

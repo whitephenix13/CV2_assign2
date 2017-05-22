@@ -53,7 +53,7 @@ plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epi
 
 %Structure from Motion
 % Filter out the cooridinates with big z values(more than 3), and scale the image by multiplying the z values by 10
-[ structure, motion, s ] = SfM(measurement_matrix, 10, 3);
+[ structure, motion, s ] = SfM(measurement_matrix, 150, 1, 0.5, 0.5);
 
 end
 

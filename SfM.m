@@ -30,5 +30,10 @@ end
 %Scale z
 s(3,:) = s(3,:)*scale_z;
 
+figure(5);
+scatter3(structure(1,:),structure(2,:),structure(3,:));
+figure(6);
+scatter3(s(1,:),s(2,:),s(3,:));
+
 end
 

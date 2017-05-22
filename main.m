@@ -41,7 +41,7 @@ plot_epipolar(img1,img2,F_den,inliers_index2,[xa',ya'],[xb',yb'],'normalized epi
 %Look second half of lecture 2 for algorithm
 
 %Normalize the data by the means
-[ new_point_correspondance ] = normalize_coordinates( point_correspondance, point_view_matrix );
+[ normalized_measurement_matrix ] = normalize_coordinates( measurement_matrix );
 
 %Pick the biggest dense block(all values are 1) in the point_view_matrix
 [ measurement_matrix, block_view] = build_dense_block( point_view_matrix, new_point_correspondance);
